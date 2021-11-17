@@ -6,9 +6,10 @@ This project demonstrates the implementation publish-subscribe messaging pattern
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-  * [Run](#run)
+* [Run](#run)
 
 ## System Architecture
+![](assets/system_architecture.png)
 
 ## Getting Started
 ### Prerequisites
@@ -25,9 +26,40 @@ git clone https://github.com/mushoffa/redis-pubsub-go.git
 ```bash
 cd redis-pubsub-go
 ```
-3. Run the following command to run all the services.
+3. Run the following command to run all the services in docker container.
 ```bash
 make run
 ```
 
-### Run
+## Run
+1. Run the following command to verify docker container is up and running.
+```bash
+$ docker ps
+CONTAINER ID   IMAGE                        COMMAND                  CREATED          STATUS         PORTS                                       NAMES
+a62b3a1a2205   redis-pubsub-go_publisher    "./publisher"            21 minutes ago   Up 1 second    0.0.0.0:9001->9001/tcp, :::9001->9001/tcp   go-publisher
+13a50aa092ac   redis-pubsub-go_subscriber   "./subscriber"           21 minutes ago   Up 1 second                                                go-subscriber
+4a72e095f7b7   redis:latest                 "docker-entrypoint.s…"   21 minutes ago   Up 2 seconds   0.0.0.0:6380->6379/tcp, :::6380->6379/tcp   redis-pubsub
+```
+
+2. Send HTTP POST request to go-publisher using curl or [Postman](https://www.postman.com/).
+```bash
+curl -X POST \
+  http://localhost:9001/publish \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -d '{
+  "topic": "publisher.test",
+  "data": "test"
+}'
+```
+
+3. Run 'docker logs' on publisher, and subscriber to verify the message goes through redis and received on subsriber.
+```bash
+$ docker logs -f go-publisher
+[GIN] 2021/11/17 - 17:29:34 | 200 |     358.299µs |      172.30.0.1 | POST     "/publish"
+```
+
+```bash
+$ docker logs -f go-subscriber
+Received message: publisher.test, Data: "test"
+```

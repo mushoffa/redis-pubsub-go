@@ -14,7 +14,7 @@ type Publisher struct {
 }
 
 func main() {
-	redisHost := "localhost:6379"
+	redisHost := "redis-pubsub:6379"
 	redisPassword := ""
 	redisDB := 0
 

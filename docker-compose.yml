@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 services:
   publisher:
     build:
@@ -6,7 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: go-publisher
     ports:
-      - 9001:9001
+      - "9001:9001"
+    #network_mode: host
     depends_on:
       - redis
     networks:
@@ -17,8 +18,9 @@ services:
       context: ./subscriber
       dockerfile: Dockerfile
     container_name: go-subscriber
-    ports:
-      - 9002:9002
+    #ports:
+    #  - 9002:9002
+    #network_mode: host
     depends_on:
       - redis
     networks:
@@ -28,7 +30,8 @@ services:
     image: redis:latest
     container_name: redis-pubsub
     ports:
-      - 6379:6379
+      - "6380:6379"
+    #network_mode: host
     networks:
       - microservices
     restart: unless-stopped
