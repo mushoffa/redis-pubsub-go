@@ -9,6 +9,8 @@ services:
       - "9001:9001"
     #network_mode: host
     depends_on:
+      - prometheus
+      - jaeger
       - redis
     networks:
       - microservices
@@ -25,6 +27,21 @@ services:
       - redis
     networks:
       - microservices
+  
+  prometheus:
+    image: prom/prometheus:v2.25.2
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    #volumes:
+    #  - ./docs/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.22.0
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      - "14268:14268"
 
   redis:
     image: redis:latest

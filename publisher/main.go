@@ -3,9 +3,13 @@ package main
 import (
 	"bytes"
 	"context"
+	"embed"
 	"encoding/json"
 	"fmt"
+
+	// "io/fs"
 	"net/http"
+	"publisher/openapi"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mushoffa/go-library/redis"
@@ -25,9 +29,13 @@ type Publisher struct {
 	Data  interface{} `json:"data" binding:"required"`
 }
 
+//go:embed static
+var content embed.FS
+
 func main() {
 
-	redisHost := "redis-pubsub:6379"
+	// redisHost := "redis-pubsub:6379"
+	redisHost := ":6380"
 	redisPassword := ""
 	redisDB := 0
 
@@ -42,6 +50,15 @@ func main() {
 
 	router := gin.Default()
 	router.POST("/publish", handler.Publish)
+
+	// fsys, _ := fs.Sub(content, "static")
+	// swagger := http.StripPrefix("/static/", http.FileServer(http.FS(fsys)))
+	// router.GET("/swagger/*any", gin.WrapH(swagger))
+	// router.StaticFS("/swagger", http.FileServer(http.FS(fsys)))
+	router.Static("/swagger", "static/swagger-ui/")
+	// router.GET("/swagger/*any", http.StripPrefix("/static/", http.FileServer(http.FS(fsys))))
+
+	openapi.RegisterOpenAPI(router)
 
 	server := server.NewHttpServer(9001, router)
 	server.Run()

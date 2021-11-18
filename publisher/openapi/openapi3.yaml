@@ -1,0 +1,65 @@
+components:
+  requestBodies:
+    PublisherRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              data:
+                minLength: 1
+                type: string
+              topic:
+                default: publisher.
+                minLength: 1
+                type: string
+      description: Request used for creating a task.
+      required: true
+  responses:
+    ErrorResponse:
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                type: string
+      description: Response when errors happen.
+    PublisherResponse:
+      content:
+        application/json:
+          schema:
+            properties:
+              OK:
+                type: string
+      description: Response
+  schemas:
+    Publisher:
+      properties:
+        data:
+          type: string
+        topic:
+          type: string
+      type: object
+info:
+  description: REST APIs used for interacting with the Publisher Service
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Publisher API
+  version: 0.0.0
+openapi: 3.0.0
+paths:
+  /publish:
+    post:
+      operationId: Publish Topic
+      requestBody:
+        $ref: '#/components/requestBodies/PublisherRequest'
+      responses:
+        "201":
+          $ref: '#/components/responses/PublisherResponse'
+        "400":
+          $ref: '#/components/responses/ErrorResponse'
+        "500":
+          $ref: '#/components/responses/ErrorResponse'
+servers:
+- description: Local development
+  url: http://localhost:9001
