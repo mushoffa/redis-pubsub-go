@@ -41,17 +41,8 @@ a62b3a1a2205   redis-pubsub-go_publisher    "./publisher"            21 minutes 
 4a72e095f7b7   redis:latest                 "docker-entrypoint.s…"   21 minutes ago   Up 2 seconds   0.0.0.0:6380->6379/tcp, :::6380->6379/tcp   redis-pubsub
 ```
 
-2. Send HTTP POST request to go-publisher using curl or [Postman](https://www.postman.com/).
-```bash
-curl -X POST \
-  http://localhost:9001/publish \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json' \
-  -d '{
-  "topic": "publisher.test",
-  "data": "test"
-}'
-```
+2. Open [http://localhost:9001/swagger](http://localhost:9001/swagger) to send HTTP request using Swagger.
+![](assets/swagger.png)
 
 3. Run 'docker logs' on publisher, and subscriber to verify the message goes through redis and received on subsriber.
 ```bash
